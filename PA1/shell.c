@@ -14,6 +14,15 @@ int shellFind(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellFind if execvp fails to allow loop to continue
+  execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/find", args);
+
+
+  if(execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/find" , args) == -1) {
+      perror("cannot find file");
+      exit(EXIT_FAILURE);
+     
+    }
+        
 
   return 1;
 }
@@ -31,7 +40,14 @@ int shellDisplayFile(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellDisplayFile if execvp fails to allow loop to continue
+  execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/display", args);
 
+
+  if(execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/display" , args) == -1) {
+      perror("cannot display file");
+      exit(EXIT_FAILURE);
+    }
+        
   return 1;
 }
 
@@ -49,7 +65,14 @@ int shellListDirAll(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellListDirAll if execvp fails to allow loop to continue
+  execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/listdirall", args);
 
+
+  if(execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/listdirall" , args) == -1) {
+      perror("cannot listdirall");
+      exit(EXIT_FAILURE);
+    }
+        
   return 1;
 }
 
@@ -66,6 +89,14 @@ int shellListDir(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellListDir
+  execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/listdir", args);
+
+
+  if(execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/listdir" , args) == -1) {
+      perror("cannot listdir");
+      exit(EXIT_FAILURE);
+    }
+    
 
   return 1;
 }
@@ -84,6 +115,13 @@ int shellCountLine(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellCountLine if execvp fails to allow loop to continue
+  execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/countline", args);
+
+
+  if(execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/countline" , args) == -1) {
+      perror("cannot count line");
+      exit(EXIT_FAILURE);
+    }
 
   return 1;
 }
@@ -101,7 +139,14 @@ int shellSummond(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellDaemonize if execvp fails to allow loop to continue
+  execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/summond", args);
 
+
+  if(execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/summond" , args) == -1) {
+      perror("cannot summond");
+      exit(EXIT_FAILURE);
+    }
+        
   return 1;
 }
 
@@ -120,7 +165,14 @@ int shellCheckDaemon(char **args)
   // 3. A successful execvp never returns, while a failed execvp returns -1
   // 4. Print some kind of error message if it returns -1
   // 5. return 1 to the caller of shellCheckDaemon if execvp fails to allow loop to continue
+  execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/checkdaemon", args);
 
+
+  if(execvp("/mnt/c/Users/dksat/Documents/GitHub/ProgrammingAssignment1/PA1/shellPrograms/checkdaemon" , args) == -1) {
+      perror("cannot check daemon");
+      exit(EXIT_FAILURE);
+    }
+        
   return 1;
 }
 
@@ -165,6 +217,7 @@ int shellHelp(char **args)
   }
 
   return 1;
+  shellLoop();
 }
 
 /**
@@ -244,8 +297,18 @@ int shellUsage(char **args)
    Execute inputs when its in the default functions
    Otherwise, print error message and return to loop
  */
+bool string_in(char *my_str, const char *string_list[], int num_strings)
+{
+    for ( int i = 0; i < num_strings; i++ )
+        if (strcmp(my_str, string_list[i]) == 0 )
+            return true;
+
+    return false;
+}
+
 int shellExecuteInput(char **args)
 {
+  
   /** TASK 3 **/
 
   // 1. Check if args[0] is NULL. If it is, an empty command is entered, return 1
@@ -255,15 +318,109 @@ int shellExecuteInput(char **args)
   // 5. For the parent process, wait for the child process to complete and fetch the child's return value.
   // 6. Return the child's return value to the caller of shellExecuteInput
   // 7. If args[0] is not in builtin_command, print out an error message to tell the user that command doesn't exist and return 1
+  
+  int status;
+  int index;
+  pid_t pid;
+
+  if(args[0]==NULL){
+    return 1;
+  }
+
+  for (int i = 0; i < numOfBuiltinFunctions(); i++) {
+    
+    if ((strcmp(args[0],"cd")) == 0 ||(strcmp(args[0],"help")) == 0 ||(strcmp(args[0],"exit")) == 0 ||(strcmp(args[0],"usage") == 0)){
+        (*builtin_commandFunc[i])(args);
+        }
+    
+    else if(strcmp(args[0], builtin_commands[i]) == 0){
+      index = i;
+      pid = fork();
+      //system("pwd");
+    }
+
+    if(string_in(args[0], builtin_commands, numOfBuiltinFunctions())== false){
+      perror("no command found");
+      shellLoop();
+      exit(EXIT_FAILURE);
+      
+    
+    }
+    
+  
+      
+  } 
+  
+  //child process
+  if (pid == 0) {
+      printf("fork works \n");
+
+      (*builtin_commandFunc[index])(args);
+      
+
+      if(execvp(args[0], args) == -1) {
+        perror("cannot execute");
+        
+      }   
+      
+      
+      
+    }
+
+  //check if fork is successful  
+  else if (pid < 0) {
+    perror("error forking");
+    }
+
+  else {
+    // Parent process
+    waitpid(pid, &status, WUNTRACED);
+    int exit_status = 0;
+        
+    if (WIFEXITED(status)){
+      exit_status = WEXITSTATUS(status);
+    }
+
+
+
+    
+  }
+
+  
 
   return 1;
 }
+
+
+  
+
 
 /**
    Read line from stdin, return it to the Loop function to tokenize it
  */
 char *shellReadLine(void)
 {
+  int buffer_size = 1024;
+  
+  char *buffer = malloc(sizeof(char) * buffer_size);
+  size_t size = 0;
+   
+
+  if (getline(&buffer, &size, stdin) == -1){
+    if (feof(stdin)) {
+      free(buffer);
+      exit(EXIT_SUCCESS);
+      
+
+    } else  {
+      perror("cannot read line");
+      exit(EXIT_FAILURE);
+    }
+  }
+
+
+  return buffer;
+
   /** TASK 1 **/
   // read one line from stdin using getline()
 
@@ -272,7 +429,6 @@ char *shellReadLine(void)
   // 3. Fetch an entire line from input stream stdin using getline() function. getline() will store user input onto the memory location allocated in (1)
   // 4. Return the char*
 
-  return NULL;
 }
 
 /**
@@ -288,7 +444,38 @@ char **shellTokenizeInput(char *line)
   // 3. Tokenize the *line using strtok() function
   // 4. Return the char **
 
-  return NULL;
+  int buffer_size = 1024;
+  int index = 0;
+  char **token_positions = malloc(buffer_size * sizeof(char*));
+  
+
+  if (!token_positions) {
+    fprintf(stderr, "cannot split tokens \n");
+    exit(EXIT_FAILURE);
+  }
+
+  char* token = strtok(line, SHELL_INPUT_DELIM );
+  while (token != NULL) {
+    token_positions[index] = token;
+    index++;
+
+    //reallocate memory space if space runs out
+    if (index >= buffer_size) {
+      buffer_size += 1024;
+      token_positions = realloc(token_positions, buffer_size * sizeof(char*));
+      if (!token_positions) {
+        fprintf(stderr, "cannot allocate more space for tokens \n");
+        exit(EXIT_FAILURE);
+      }
+    }
+    token = strtok(NULL, SHELL_INPUT_DELIM);
+  }
+  token_positions[index] = NULL;
+
+  free(token_positions);
+
+  return token_positions;
+  
 }
 
 /**
@@ -314,18 +501,26 @@ void shellLoop(void)
 
   // 6. free memory location containing the strings of characters
   // 7. free memory location containing char* to the first letter of each word in the input string
-  // 8. check if shellExecuteInput returns 1. If yes, loop back to Step 1 and prompt user with new input. Otherwise, exit the shell. 
-
-
+  // 8. check if shellExecuteInput returns 1. If yes, loop back to Step 1 and prompt user with new input. Otherwise, exit the shell.
+  do {
+    printf(">>> ");
+    
+    //already freed line and args in respective functions
+    line = shellReadLine();
+    args = shellTokenizeInput(line);
+    status = shellExecuteInput(args);
+  } while (status);
 }
+
+
+
 
 int main(int argc, char **argv)
 {
-
-  printf("Shell Run successful. Running now: \n");
-
+   printf("Shell Run successful. Running now: \n");
+ 
   // Run command loop
   shellLoop();
-
   return 0;
+
 }

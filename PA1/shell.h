@@ -10,11 +10,13 @@
 #include <dirent.h>
 /* limits.h defines "PATH_MAX". */
 #include <limits.h>
+#include <stdbool.h>
 
 
 #define SHELL_BUFFERSIZE 256
 #define SHELL_INPUT_DELIM " \t\r\n\a"
 #define SHELL_OPT_DELIM "-"
+
 
 /*
   List of builtin commands, followed by their corresponding functions.
@@ -67,10 +69,10 @@ int (*builtin_commandFunc[]) (char **) = {
   &shellCD, //builtin_commandFunc[0]
   &shellHelp, //builtin_commandFunc[1]
   &shellExit, //builtin_commandFunc[2]
-  &shellUsage,//builtin_commandFunc[3]
+  &shellUsage, //builtin_commandFunc[3]
   &shellDisplayFile, //builtin_commandFunc[4]
   &shellCountLine, //builtin_commandFunc[5]
-  &shellListDir,//builtin_commandFunc[6]
+  &shellListDir, //builtin_commandFunc[6]
   &shellListDirAll,//builtin_commandFunc[7]
   &shellFind,//builtin_commandFunc[8]
   &shellSummond, //builtin_commandFunc[9]
