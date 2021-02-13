@@ -220,7 +220,7 @@ int shellHelp(char **args)
   }
 
   return 1;
-  shellLoop();
+  
 }
 
 /**
@@ -332,9 +332,19 @@ int shellExecuteInput(char **args)
 
   for (int i = 0; i < numOfBuiltinFunctions(); i++) {
     
-    if ((strcmp(args[0],"cd")) == 0 ||(strcmp(args[0],"help")) == 0 ||(strcmp(args[0],"exit")) == 0 ||(strcmp(args[0],"usage") == 0)){
-        (*builtin_commandFunc[i])(args);
-        }
+    if ((strcmp(args[0],"cd")) == 0 ){
+      return shellCD(args);
+        
+    }
+    else if((strcmp(args[0],"help")) == 0 ){
+      return shellHelp(args);
+    }
+    else if((strcmp(args[0],"exit")) == 0){
+      return shellExit(args);
+    }
+    else if((strcmp(args[0],"usage") == 0)){
+      return shellUsage(args);
+    }
     
     else if(strcmp(args[0], builtin_commands[i]) == 0){
       index = i;
@@ -345,7 +355,7 @@ int shellExecuteInput(char **args)
     if(string_in(args[0], builtin_commands, numOfBuiltinFunctions())== false){
       perror("no command found");
       shellLoop();
-      exit(EXIT_FAILURE);
+      
       
     
     }
@@ -411,7 +421,6 @@ char *shellReadLine(void)
 
   if (getline(&buffer, &size, stdin) == -1){
     if (feof(stdin)) {
-      free(buffer);
       exit(EXIT_SUCCESS);
       
 
@@ -475,7 +484,7 @@ char **shellTokenizeInput(char *line)
   }
   token_positions[index] = NULL;
 
-  free(token_positions);
+
 
   return token_positions;
   
@@ -512,7 +521,12 @@ void shellLoop(void)
     line = shellReadLine();
     args = shellTokenizeInput(line);
     status = shellExecuteInput(args);
+    free(line);
+    free(args);
   } while (status);
+
+
+  
 }
 
 
@@ -521,7 +535,8 @@ void shellLoop(void)
 int main(int argc, char **argv)
 {
    printf("Shell Run successful. Running now: \n");
- 
+  
+
   // Run command loop
   shellLoop();
   return 0;
