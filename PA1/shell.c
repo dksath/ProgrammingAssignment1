@@ -343,7 +343,14 @@ int shellExecuteInput(char **args)
       return shellExit(args);
     }
     else if((strcmp(args[0],"usage") == 0)){
+      if(strcmp(args[0],"usage")==0 && !args[1]){
+        perror("please enter instruction");
+        break;
+    
+      }
+      else{
       return shellUsage(args);
+      }
     }
     
     else if(strcmp(args[0], builtin_commands[i]) == 0){
@@ -520,9 +527,12 @@ void shellLoop(void)
     //already freed line and args in respective functions
     line = shellReadLine();
     args = shellTokenizeInput(line);
+    
+    
     status = shellExecuteInput(args);
     free(line);
     free(args);
+    
   } while (status);
 
 
