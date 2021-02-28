@@ -16,6 +16,34 @@ int shellCountLine_code(char **args)
     // 7. Print out how many lines are there in this particular filename
     // 8. Return 1, to exit program
 
+    if(args[1] == NULL){
+        perror("please give a file name\n");
+        return 1;
+    }
+
+    FILE *fp = fopen(args[1], "r");
+    if(fp != NULL){
+        int count;
+        size_t size = 32;
+        char *buffer = malloc(sizeof(char) * size);
+        if(buffer == NULL){
+            perror("shared memory not set");
+            return 1;
+        }
+
+        while(getline(&buffer, &size, fp) != -1){
+            count++;
+        }
+
+        fclose(fp);
+        free(buffer);
+
+        printf("There are %d lines in %s\n",count, args[1]);
+    }else{
+        perror("There are no lines in this file");
+        return 1;
+    }
+
     return 1;
 }
 
