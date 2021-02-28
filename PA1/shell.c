@@ -341,6 +341,10 @@ int shellExecuteInput(char **args)
     }
     else if((strcmp(args[0],"exit")) == 0){
       return shellExit(args);
+      if(strcmp(args[0],"exit")==0 && !args[1]){
+          shellExit(args);
+          break;
+      }
     }
     else if((strcmp(args[0],"usage") == 0)){
       if(strcmp(args[0],"usage")==0 && !args[1]){
@@ -358,16 +362,6 @@ int shellExecuteInput(char **args)
       pid = fork();
       //system("pwd");
     }
-
-    if(string_in(args[0], builtin_commands, numOfBuiltinFunctions())== false){
-      perror("no command found");
-      shellLoop();
-      
-      
-    
-    }
-    
-  
       
   } 
   
@@ -399,15 +393,14 @@ int shellExecuteInput(char **args)
         
     if (WIFEXITED(status)){
       exit_status = WEXITSTATUS(status);
-    }
-
-
-
-    
+    }  
   }
 
+  if(string_in(args[0], builtin_commands, numOfBuiltinFunctions())== false){
+      printf("no command found try again loser\n");
+      
+    }
   
-
   return 1;
 }
 
